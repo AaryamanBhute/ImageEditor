@@ -1,0 +1,14 @@
+.selectedNavItem, .unselectedNavItem:hover{
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+
+.navIcon{
+    padding: 0.5rem;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+}
+
+.navIcon:hover{
+    border: 2px solid var(--text-color);
+}

@@ -1,0 +1,26 @@
+.container{
+    border: 4px solid var(--accent-color);
+    background-color: var(--light-accent-color);
+    cursor: pointer;
+}
+
+.uploadTitle{
+    font-size: 1.5rem;
+}
+
+.uploadTitle, .uploadSubtitle{
+    padding: 0;
+    text-align: start;
+}
+
+.uploadIcon{
+    padding: 0.5rem;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    margin-right: 1rem;
+}
+
+.fileCard{
+    background-color: var(--background-color);
+    padding: 2rem;
+}

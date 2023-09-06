@@ -1,5 +1,7 @@
 import Link from "next/link";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileCode } from "@fortawesome/free-solid-svg-icons";
+import '@/static/nav.css'
 
 type NavItemProp = {
     title: string;
@@ -8,7 +10,7 @@ type NavItemProp = {
 
 function NavItem(props : NavItemProp){
     return (
-        <Link href={`/${props.title}`} className={props.page == props.title ? "bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"}
+        <Link href={`/${props.title}`} className={props.page == props.title ? "selectedNavItem rounded-md px-3 py-2 text-base font-medium" : "unselectedNavItem rounded-md px-3 py-2 text-base font-medium"}
                     >{props.title}</Link >
         )
 }
@@ -19,13 +21,13 @@ type NavProps = {
 
 export default function Nav(props : NavProps){
     return (
-        <nav className="bg-gray-800">
+      <nav className="bg-inherit">
         <div className="mx-auto w-screen px-2 sm:px-6 lg:px-8">
-          <div className="relative flex h-16 items-center justify-between">
-            <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div className="relative flex h-16 items-center justify-between mt-3">
+            <div className="flex flex-1 items-center justify-center sm:justify-start">
               <Link href="/">
                 <div className="flex flex-shrink-0 items-center">
-                  <img className="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company"/>
+                  <FontAwesomeIcon icon={faFileCode} color="white" size={"2x"} className="navIcon"/>
                 </div>
               </Link>
               
@@ -39,7 +41,7 @@ export default function Nav(props : NavProps){
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button type="button" className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+              <button type="button" className="relative rounded-full p-1 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span className="absolute -inset-1.5"></span>
                 <span className="sr-only">View notifications</span>
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
