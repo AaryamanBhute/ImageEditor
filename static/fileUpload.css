@@ -24,3 +24,14 @@
     background-color: var(--background-color);
     padding: 2rem;
 }
+
+.submitButton{
+    padding: 1rem;
+    border: 4px solid var(--accent-color);
+    background-color: var(--light-accent-color);
+}
+
+.submitButton:hover{
+    background-color: var(--accent-color);
+    color: var(--background-color);
+}

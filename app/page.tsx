@@ -1,9 +1,12 @@
 import Nav from "@/components/nav"
 import FileUpload from "@/components/fileUpload";
-
+import { getServerSession  } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import '@/static/home.css'
 
-export default function Page() {
+export default async function Page() {
+
+  const session = await getServerSession(authOptions);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start">

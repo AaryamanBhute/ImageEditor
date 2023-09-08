@@ -2,18 +2,23 @@
 
 import React from 'react';
 import {useState, useEffect} from 'react';
+import {useSession, signIn, signOut} from "next-auth/react";
 import {useDropzone} from 'react-dropzone';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
-
 import "@/static/fileUpload.css"
 
-export default function FileUpload(props : any) {
+type FileUploadProps = {
+};
+
+export default function FileUpload(props : FileUploadProps) {
   const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const {data : session, status} = useSession();
 
   useEffect(()=>{
-    setUploadedFiles(uploadedFiles.concat(acceptedFiles))
+    if (status !== 'unauthenticated') setUploadedFiles(uploadedFiles.concat(acceptedFiles))
+    else if(acceptedFiles.length > 0) signIn();
   }, [acceptedFiles])
 
   function formatFloat(f : number, i : number){
@@ -52,30 +57,58 @@ export default function FileUpload(props : any) {
       </div>
     )
   }
+
+  async function uploadFiles(){
+    if (uploadFiles.length < 0) {
+      return
+    }
+    try {
+      const data = new FormData()
+
+      uploadedFiles.map((file)=>{
+        data.append('files', file)
+      })
+
+      console.log(data.get("files"))
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: data
+      })
+      // handle the error
+      console.log(res)
+    } catch (e: any) {
+      // Handle errors here
+      console.error(e)
+    }
+  }
   
   const files = uploadedFiles.map(file => (getCard(file)));
 
+  console.log()
+
   return (
-    <section className="container w-fit rounded-lg">
-      <div {...getRootProps({className: 'dropzone'})} className='p-10'>
-        <input {...getInputProps()} />
-        {uploadedFiles.length > 0 ?
-        
-        <div id='files' className='flex flex-wrap justify-center'>
-          {files}
-        </div>
-        : 
-        <div className='uploadMessage flex justify-center w-fit'>
-          <FontAwesomeIcon icon={faUpload} size={"3x"} className="uploadIcon"/>
-          <div className='flex flex-wrap align-start flex-col'>
-            <h1 className='uploadTitle w-full'>Drop or upload files</h1>
-            <h2 className='uploadSubtitle w-full'>Upload up to 10 files at a time</h2>
+    <div>
+      <button onClick={()=>signIn()}>SIGN IN</button>
+      <button onClick={()=>signOut()}>SIGN OUT</button>
+      <p>{status}</p>
+      <section className="container w-fit rounded-lg">
+        <div {...getRootProps({className: 'dropzone'})} className='p-10'>
+          {uploadedFiles.length > 0 ?
+          <div id='files' className='flex flex-wrap justify-center'>
+            {files}
           </div>
-        </div>}
-        
-        
-        
-      </div>
-    </section>
+          : 
+          <div className='uploadMessage flex justify-center w-fit'>
+            <FontAwesomeIcon icon={faUpload} size={"3x"} className="uploadIcon"/>
+            <div className='flex flex-wrap align-start flex-col'>
+              <h1 className='uploadTitle w-full'>Drop or upload files</h1>
+              <h2 className='uploadSubtitle w-full'>Upload 1 or more files at a time</h2>
+            </div>
+          </div>}
+        </div>
+      </section>
+      {uploadedFiles.length > 0 ? <button className='submitButton rounded-full mt-4' onClick={uploadFiles}>Submit Files</button> : null}
+    </div>
   );
 }
