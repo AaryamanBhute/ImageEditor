@@ -1,0 +1,12 @@
+.cardLabel{
+    background-color: var(--background-color);
+}
+
+.fileCard{
+    border: 3px solid transparent;
+}
+
+.fileCard:hover{
+    border: 3px solid var(--accent-color);
+    cursor: pointer;
+}

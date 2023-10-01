@@ -1,15 +1,37 @@
+"use client";
+
 import Nav from "@/components/nav"
 import FileUpload from "@/components/fileUpload";
-import { getServerSession  } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { useState, useEffect } from "react";
+import { useSession} from "next-auth/react"
+import AuthenticationModal from "@/components/authenticationModal";
+import Popup from "@/components/popup";
+import useForceUpdate from "@/lib/useForceUpdate";
+import { useSearchParams } from 'next/navigation'
 import '@/static/home.css'
 
-export default async function Page() {
+type Dictionary = {
+  [x: string]: string | Dictionary;
+};
 
-  const session = await getServerSession(authOptions);
+export default function Page(params: { [key: string]: string | string[] | any | undefined }) {
+  const searchParams = useSearchParams()
+  const [popupMessage, setPopupMessage] = useState<null | string>(null);
+  const [popupType, setPopupType] = useState<null | string>(null);
+  const [openAuthentication, setOpenAuthenticaiton] = useState(false);
+  const forceUpdate = useForceUpdate();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (searchParams.get("error") !== null){
+      setPopupMessage(searchParams.get("error"))
+      setPopupType("failure")
+  }  }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start">
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      {openAuthentication ? <AuthenticationModal setPopupMessage={setPopupMessage} setPopupType={setPopupType} forceUpdate={forceUpdate} close={()=>setOpenAuthenticaiton(false)}/> : null}
+      <Popup message={popupMessage} type={popupType} onFinish={()=>setPopupMessage(null)}/>
       <Nav page={"Home"}/>
       <div className="mainTitle flex flex-wrap sm:justify-center content-start w-full max-w-6xl text-center m-3 h-fit">
         <h1 className="w-full">Edit your files within the browser</h1>
@@ -21,7 +43,9 @@ export default async function Page() {
         </h2>
       </div>
       <div className="flex flex-wrap sm:justify-center content-start w-full max-w-6xl text-center m-3 h-fit" id="dropzoneWrapper">
-        <FileUpload/>
+        <FileUpload onUnauthenticated={()=>{
+          setOpenAuthenticaiton(true)
+        }} setPopupMessage={setPopupMessage} setPopupType={setPopupType}/>
       </div>
     </main>
   )

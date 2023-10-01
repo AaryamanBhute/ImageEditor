@@ -32,7 +32,6 @@ body {
 
 html * {
   font-family: 'Cascadia', sans-serif;
-  color: var(--text-color);
 }
 
 h1, h1 *{
@@ -61,4 +60,13 @@ Nav{
 
 .typewriter{
   letter-spacing: -.025em;
+}
+
+.even-box-shadow{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.text-scroll{
+  text-wrap: nowrap;
+  overflow-x: auto;
 }

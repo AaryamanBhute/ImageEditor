@@ -1,0 +1,19 @@
+#popup{
+    background-color: var(--background-color);
+    animation: fadeInOut 2s forwards;
+}
+
+@keyframes fadeInOut {
+    0%{
+        opacity: 0;
+    }
+    10%{
+        opacity: 1;
+    }
+    90%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}

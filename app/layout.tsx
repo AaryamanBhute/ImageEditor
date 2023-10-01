@@ -4,6 +4,8 @@ import { Inter } from 'next/font/google'
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import {Providers} from "./providers";
+import AuthenticationModal from '@/components/authenticationModal';
+import { SessionProvider } from "next-auth/react"
 
 config.autoAddCss = false;
 
@@ -19,11 +21,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  {}
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
+    
+      <html lang="en">
+        <body className={inter.className}>
+          <Providers>{children}</Providers>
+        </body>
+      </html>
+    
   )
 }

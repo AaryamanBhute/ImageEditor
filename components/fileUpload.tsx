@@ -7,8 +7,13 @@ import {useDropzone} from 'react-dropzone';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import "@/static/fileUpload.css"
+import getFileImage from '@/lib/fileImage';
 
 type FileUploadProps = {
+  onUnauthenticated : Function,
+  setPopupMessage: Function,
+  setPopupType: Function,
+  onUploaded?: Function,
 };
 
 export default function FileUpload(props : FileUploadProps) {
@@ -18,7 +23,7 @@ export default function FileUpload(props : FileUploadProps) {
 
   useEffect(()=>{
     if (status !== 'unauthenticated') setUploadedFiles(uploadedFiles.concat(acceptedFiles))
-    else if(acceptedFiles.length > 0) signIn();
+    else if(acceptedFiles.length > 0) props.onUnauthenticated()
   }, [acceptedFiles])
 
   function formatFloat(f : number, i : number){
@@ -38,20 +43,11 @@ export default function FileUpload(props : FileUploadProps) {
   }
 
   function getCard(file : File){
-    var path = "/file.svg"
-    if (file.type.includes("audio")) path = "/audio.svg"
-    else if (file.type.includes("image")) path = "/image.svg"
-    else if (file.type.includes("msword") || file.type.includes("officedocument.wordprocessingml")) path = "/doc.svg"
-    else if (file.type.includes("ms-excel") || file.type.includes("officedocument.spreadsheetml")) path = "/excel.svg"
-    else if (file.type.includes("pdf")) path = "/pdf.svg"
-    else if (file.type.includes("ms-powerpoint") || file.type.includes("officedocument.presentationml")) path = "/powerpoint.svg"
-    else if (file.type.includes("video")) path = "/video.svg"
-    else if (file.type.includes("text")) path = "/txt.svg"
-    else if (file.type.includes("zip")) path = "/zip.svg"
+    var path = getFileImage(file)
 
     return (
-      <div className='fileCard rounded-3xl m-2'>
-        <img src={path} className='w-20 inline'/>
+      <div className='fileCard rounded-3xl m-2 flex flex-col items-center'>
+        <img src={path} className='w-16 inline'/>
         <p className='mt-2'>{file.name.length <= 12 ? file.name : `${file.name.substring(0, 10)}...`}</p>
         <p>{formattedSize(file.size)}</p>
       </div>
@@ -59,24 +55,26 @@ export default function FileUpload(props : FileUploadProps) {
   }
 
   async function uploadFiles(){
-    if (uploadFiles.length < 0) {
-      return
-    }
+    if (uploadedFiles.length <= 0) return
+
     try {
       const data = new FormData()
 
       uploadedFiles.map((file)=>{
         data.append('files', file)
       })
-
-      console.log(data.get("files"))
-
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: data
       })
+
+      props.setPopupMessage("Uploaded files successfully")
+      props.setPopupType("success")
+      setUploadedFiles([])
+      
+      if (props.onUploaded) props.onUploaded()
+
       // handle the error
-      console.log(res)
     } catch (e: any) {
       // Handle errors here
       console.error(e)
@@ -85,13 +83,8 @@ export default function FileUpload(props : FileUploadProps) {
   
   const files = uploadedFiles.map(file => (getCard(file)));
 
-  console.log()
-
   return (
-    <div>
-      <button onClick={()=>signIn()}>SIGN IN</button>
-      <button onClick={()=>signOut()}>SIGN OUT</button>
-      <p>{status}</p>
+    <div className='w-full flex flex-col justify-center items-center'>
       <section className="container w-fit rounded-lg">
         <div {...getRootProps({className: 'dropzone'})} className='p-10'>
           {uploadedFiles.length > 0 ?
@@ -108,7 +101,10 @@ export default function FileUpload(props : FileUploadProps) {
           </div>}
         </div>
       </section>
-      {uploadedFiles.length > 0 ? <button className='submitButton rounded-full mt-4' onClick={uploadFiles}>Submit Files</button> : null}
+      {uploadedFiles.length > 0 ? <button className='submitButton rounded-full mt-4 w-fit' onClick={()=>{
+        console.log("CLICKED");
+        uploadFiles()}
+        }>Submit Files</button> : null}
     </div>
   );
 }

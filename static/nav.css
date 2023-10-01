@@ -3,12 +3,28 @@
     color: var(--background-color);
 }
 
-.navIcon{
+.navIcon, .userIcon{
     padding: 0.5rem;
     border: 2px solid transparent;
     border-radius: 1rem;
 }
 
-.navIcon:hover{
-    border: 2px solid var(--text-color);
+#userButton{
+    border: 4px solid var(--background-color);
+}
+
+#userButton:hover{
+    border: 4px solid var(--accent-color);
+}
+
+.navIcon{
+    color: var(--text-color);
+}
+
+.navIcon:hover, .userIcon:hover{
+    color: var(--accent-color);
+}
+
+nav{
+    height: 90px;
 }
