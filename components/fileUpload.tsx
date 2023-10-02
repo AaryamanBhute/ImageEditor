@@ -7,7 +7,7 @@ import {useDropzone} from 'react-dropzone';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import "@/static/fileUpload.css"
-import getFileImage from '@/lib/fileImage';
+import {getFileImage} from '@/lib/fileInfo';
 
 type FileUploadProps = {
   onUnauthenticated : Function,

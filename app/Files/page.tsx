@@ -8,7 +8,7 @@ import AuthenticationModal from "@/components/authenticationModal";
 import Popup from "@/components/popup";
 import useForceUpdate from "@/lib/useForceUpdate";
 import { useSearchParams } from 'next/navigation'
-import getFileImage from "@/lib/fileImage";
+import {getFileImage} from "@/lib/fileInfo";
 import '@/static/files.css'
 import Link from "next/link";
 

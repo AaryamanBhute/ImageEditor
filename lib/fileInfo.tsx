@@ -1,4 +1,4 @@
-export default function getFileImage(fileData : any){
+export function getFileImage(fileData : any){
     var path = "/file.svg"
     if (fileData.type.includes("audio")) path = "/audio.svg"
     else if (fileData.type.includes("image")) path = "/image.svg"
@@ -11,4 +11,14 @@ export default function getFileImage(fileData : any){
     else if (fileData.type.includes("zip")) path = "/zip.svg"
 
     return path
+}
+
+export function getFileType(fileData : any){
+    var res = "unknown"
+    if (fileData.type.includes("audio")) res = "audio"
+    else if (fileData.type.includes("image")) res = "image"
+    else if (fileData.type.includes("pdf")) res = "pdf"
+    else if (fileData.type.includes("video")) res = "video"
+    else if (fileData.type.includes("text")) res = "text"
+    return res
 }

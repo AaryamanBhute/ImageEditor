@@ -7,11 +7,14 @@ import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation'
+import { getFileType } from "@/lib/fileInfo";
 
 
 export default function Page() {
 
     const [fileData, setFileData] = useState<any>(null)
+    const [fileType, setFileType] = useState<null | string>(null)
+    const [fileText, setFileText] = useState<null | string>(null)
     const {data : session, status} = useSession();
     const [openDelete, setOpenDelete] = useState(false)
     const [url, setUrl] = useState<null | string>(null)
@@ -30,12 +33,38 @@ export default function Page() {
             res.json().then((jsonData)=>{
                 setFileData(jsonData.data)
                 setUrl(jsonData.url)
+                setFileType(getFileType(jsonData.data))
             })
           })
     })
 
-    function sortData(){
+    function download(){
+        if (!url) return
+        fetch(url, {
+            method: 'GET',
+        })
+        .then((response) => response.blob())
+        .then((blob) => {
+            // Create blob link to download
+            const url = window.URL.createObjectURL(
+            new Blob([blob]),
+            );
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute(
+            'download',
+            `FileName.pdf`,
+            );
 
+            // Append to html link element page
+            document.body.appendChild(link);
+
+            // Start download
+            link.click();
+
+            // Clean up and remove the link
+            link.parentNode?.removeChild(link);
+        });
     }
 
     function deleteFile(){
@@ -98,14 +127,26 @@ export default function Page() {
                         <div className='w-full flex flex-col gap-2'>
                             <button className='w-full pt-2 pb-2 rounded-full border-accent border hover:bg-accent hover:text-white'>Edit with Code</button>
                             <button className='w-full pt-2 pb-2 rounded-full border-lime-500 border hover:bg-lime-500 hover:text-white'>Edit with Script</button>
+                            <button className="w-full pt-2 pb-2 rounded-full border-emerald-400 border hover:bg-emerald-400 hover:text-white flex justify-center" onClick={download}>Download</button>
                             <button className='w-full pt-2 pb-2 rounded-full border-red-600 border hover:bg-red-600 hover:text-white' onClick={()=>setOpenDelete(true)}>Permanently Delete File</button>
                         </div>
                     </div>
                 </div>
-                <div className='w-3/5 p-3'>
+                <div className='w-3/5 p-3 '>
                     <div className='rounded-lg flex flex-col w-full h-full even-box-shadow overflow-y-auto'>
                         <p className='w-full text-center font-bold text-2xl p-2'> File Preview</p>
-                        {url ?<img src={url} className='p-4'/> : null}
+                        <div className='p-3 w-full h-full'>
+                            <div className='w-full h-full flex justify-center items-center p-5 border-accent border-solid border-2 rounded-lg'>
+                                {fileData && 
+                                    fileType == "image" ? <img src={url ? url : ""} className='w-full'/> :
+                                    fileType == "audio" ? <audio controls src={url ? url : ""} className='w-full'/>:
+                                    fileType == "video" ? <video controls src={url ? url : ""} className='w-full'>
+                                            <source src={url ? url : ""} type={fileData.type} />
+                                        </video>:
+                                    fileType == "text" ? <object data={url ? url : ""} className='w-full h-screen'> Not supported </object> :
+                                    <p className='text-red-600'>Whoops! Couldn't render your file.</p>}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
