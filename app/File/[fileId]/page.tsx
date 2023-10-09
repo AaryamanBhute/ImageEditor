@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation'
 import { getFileType } from "@/lib/fileInfo";
+import { formattedSize } from '@/lib/fileInfo';
 
 
 export default function Page() {
@@ -98,26 +99,41 @@ export default function Page() {
                 <div className='w-2/5 p-3'>
                     <div className='rounded-lg flex flex-wrap w-full even-box-shadow overflow-y-auto p-3 flex justify-center' id="fileInfo">
                         <p className='w-full text-center font-bold text-2xl'> File Metadata</p>
-                        <div className='flex justify-center p-3 gap-4 overflow-x-auto w-full'>
-                            <div className='border-e border-black p-2'>
-                                <p className='font-bold p-2 line-clamp-1'>File Name</p>
-                                <p className='font-bold p-2 line-clamp-1'>Content Type</p>
-                                <p className='font-bold p-2 line-clamp-1' >Size</p>
-                                <p className='font-bold p-2 line-clamp-1'>File Id</p>
-                                <p className='font-bold p-2 line-clamp-1'>Uploaded On</p>
-                            </div>
-                            <div className='p-2 w-3/5 overflow-x-auto'>
-                                {fileData ?
-                                <div>
-                                <p className='font-bold p-2 text-accent text-scroll'>{fileData.fileName}</p>
-                                <p className='font-bold p-2 text-accent text-scroll'>{fileData.type}</p>
-                                <p className='font-bold p-2 text-accent text-scroll'>{fileData.size}</p>
-                                <p className='font-bold p-2 text-accent text-scroll'>{fileData.id}</p>
-                                <p className='font-bold p-2 text-accent text-scroll'>{new Date(fileData.uploadedOn).toString()}</p>
-                                </div> : null
-                                }
-                                
-                            </div>
+                        <div className='flex justify-center p-3 overflow-x-auto w-full'>
+                            {fileData ? 
+                            <div className='flex flex-col w-full'>
+                                <div className='flex w-full justify-center gap-5 items-center'>
+                                    <div className='border-e border-black p-5 w-1/4'>
+                                        <p className='font-bold line-clamp-1 w-full text-end'>File Name</p>
+                                    </div>
+                                    <p className='font-bold p-2 text-accent text-scroll w-4/6 text-center'>{fileData.fileName}</p>
+                                </div>
+                                <div className='flex w-full justify-center gap-5 items-center'>
+                                    <div className='border-e border-black p-5 w-1/4'>
+                                        <p className='font-bold line-clamp-1 w-full text-end'>Content Type</p>
+                                    </div>
+                                    <p className='font-bold p-2 text-accent text-scroll w-4/6 text-center'>{fileData.type}</p>
+                                </div>
+                                <div className='flex w-full justify-center gap-5 items-center'>
+                                    <div className='border-e border-black p-5 w-1/4'>
+                                        <p className='font-bold line-clamp-1 w-full text-end'>File Size</p>
+                                    </div>
+                                    <p className='font-bold p-2 text-accent text-scroll w-4/6 text-center'>{formattedSize(fileData.size)}</p>
+                                </div>
+                                <div className='flex w-full justify-center gap-5 items-center'>
+                                    <div className='border-e border-black p-5 w-1/4'>
+                                        <p className='font-bold line-clamp-1 w-full text-end'>File Id</p>
+                                    </div>
+                                    <p className='font-bold p-2 text-accent text-scroll w-4/6 text-center'>{fileData.id}</p>
+                                </div>
+                                <div className='flex w-full justify-center gap-5 items-center'>
+                                    <div className='border-e border-black p-5 w-1/4'>
+                                        <p className='font-bold line-clamp-1 w-full text-end'>Uploaded On</p>
+                                    </div>
+                                    <p className='font-bold p-2 text-accent text-scroll w-4/6 text-center'>{new Date(fileData.uploadedOn).toString()}</p>
+                                </div>
+                            </div> : null
+                            }
                         </div>
                     </div>
                     <div className='p-2'/>

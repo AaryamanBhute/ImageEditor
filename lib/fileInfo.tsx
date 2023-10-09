@@ -22,3 +22,20 @@ export function getFileType(fileData : any){
     else if (fileData.type.includes("text")) res = "text"
     return res
 }
+
+function formatFloat(f : number, i : number){
+    return Math.floor(f * (10 ** i)) / (10 ** i)
+  }
+
+
+export function formattedSize(bytes : number){
+    var order = ['b', 'kb', 'mb', 'gb', 'tb']
+    var i = 0
+
+    while (i < order.length - 1 && bytes > 1000) {
+      bytes = bytes / 1000
+      i += 1
+    }
+    
+    return `${formatFloat(bytes, 2)}${order[i]}`
+  }

@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import "@/static/fileUpload.css"
 import {getFileImage} from '@/lib/fileInfo';
+import { formattedSize } from '@/lib/fileInfo';
 
 type FileUploadProps = {
   onUnauthenticated : Function,
@@ -26,22 +27,7 @@ export default function FileUpload(props : FileUploadProps) {
     else if(acceptedFiles.length > 0) props.onUnauthenticated()
   }, [acceptedFiles])
 
-  function formatFloat(f : number, i : number){
-    return Math.floor(f * (10 ** i)) / (10 ** i)
-  }
-
-  function formattedSize(bytes : number){
-    var order = ['b', 'kb', 'mb', 'gb', 'tb']
-    var i = 0
-
-    while (i < order.length - 1 && bytes > 1000) {
-      bytes = bytes / 1000
-      i += 1
-    }
-    
-    return `${formatFloat(bytes, 2)}${order[i]}`
-  }
-
+  
   function getCard(file : File){
     var path = getFileImage(file)
 
